@@ -1,35 +1,57 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import React from 'react';
+import { Platform } from 'react-native';
+import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
+import { Stack } from 'expo-router';
+import FloatingTabBar, { TabBarItem } from '@/components/FloatingTabBar';
+import { colors } from '@/styles/commonStyles';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  // Define the tabs configuration
+  const tabs: TabBarItem[] = [
+    {
+      name: '(home)',
+      route: '/(tabs)/(home)/',
+      icon: 'magnifyingglass',
+      label: 'Search',
+    },
+    {
+      name: 'profile',
+      route: '/(tabs)/profile',
+      icon: 'gear',
+      label: 'Admin',
+    },
+  ];
 
+  // Use NativeTabs for iOS, custom FloatingTabBar for Android and Web
+  if (Platform.OS === 'ios') {
+    return (
+      <NativeTabs>
+        <NativeTabs.Trigger name="(home)">
+          <Icon sf="magnifyingglass" drawable="ic_search" />
+          <Label>Search</Label>
+        </NativeTabs.Trigger>
+        <NativeTabs.Trigger name="profile">
+          <Icon sf="gear" drawable="ic_admin" />
+          <Label>Admin</Label>
+        </NativeTabs.Trigger>
+      </NativeTabs>
+    );
+  }
+
+  // For Android and Web, use Stack navigation with custom floating tab bar
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+    <>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: 'none', // Remove fade animation to prevent black screen flash
         }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Stack.Screen name="(home)" />
+        <Stack.Screen name="profile" />
+      </Stack>
+      <FloatingTabBar tabs={tabs} />
+    </>
   );
 }

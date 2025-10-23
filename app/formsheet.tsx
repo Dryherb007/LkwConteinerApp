@@ -3,13 +3,18 @@ import { router } from 'expo-router';
 import { GlassView } from 'expo-glass-effect';
 import { useTheme } from '@react-navigation/native';
 
-export default function Modal() {
+export default function FormSheetModal() {
   const theme = useTheme();
 
+  // Use a visible dark gray for dark mode instead of pure black
+  const backgroundColor = theme.dark
+    ? 'rgb(28, 28, 30)' // Dark gray that's visible against black backgrounds
+    : theme.colors.background;
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[styles.title, { color: theme.colors.text }]}>Standard Modal</Text>
-      <Text style={[styles.text, { color: theme.colors.text }]}>This is a modal presentation.</Text>
+    <View style={[styles.container, { backgroundColor }]}>
+      <Text style={[styles.title, { color: theme.colors.text }]}>Form Sheet Modal</Text>
+      <Text style={[styles.text, { color: theme.colors.text }]}>Drag the grabber to resize!</Text>
 
       <Pressable onPress={() => router.back()}>
         <GlassView style={styles.button} glassEffectStyle="clear">
