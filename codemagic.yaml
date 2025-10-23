@@ -1,0 +1,23 @@
+workflows:
+  ios-build:
+    name: Build iOS IPA
+    environment:
+      vars:
+        XCODE_WORKSPACE: "LkwContainerApp.xcworkspace"
+        XCODE_SCHEME: "LkwContainerApp"
+      xcode: latest
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install
+      - name: Build iOS app
+        script: |
+          npx expo prebuild --platform ios
+          npx expo run:ios --configuration Release
+    artifacts:
+      - build/ios/**/*.ipa
+    publishing:
+      email:
+        recipients:
+          - attilahorvath0907@gmail.com
+
