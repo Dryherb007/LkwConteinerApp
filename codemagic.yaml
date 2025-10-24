@@ -1,21 +1,26 @@
 workflows:
-  ios-build:
-    name: Build iOS IPA
+  expo-ios-build:
+    name: Expo iOS build (no Apple account needed)
+    max_build_duration: 60
     environment:
+      node: 18
+      npm: 9
       vars:
-        XCODE_WORKSPACE: "LkwContainerApp.xcworkspace"
-        XCODE_SCHEME: "LkwContainerApp"
-      xcode: latest
+        EXPO_TOKEN: $EXPO_TOKEN
     scripts:
       - name: Install dependencies
         script: |
+          npm install -g expo-cli eas-cli
           npm install
-      - name: Build iOS app
+      - name: Expo prebuild (managed workflow)
         script: |
           npx expo prebuild --platform ios
-          npx expo run:ios --configuration Release
+      - name: Build iOS .ipa (Expo managed)
+        script: |
+          npx eas build -p ios --profile preview --non-interactive
     artifacts:
-      - build/ios/**/*.ipa
+      - dist/**/*.ipa
+      - build/**/*.ipa
     publishing:
       email:
         recipients:
