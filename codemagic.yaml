@@ -6,16 +6,16 @@ workflows:
       node: 18
       npm: 9
       vars:
-        EXPO_TOKEN: $EXPO_TOKEN
+        EAS_TOKEN: $EAS_TOKEN
     scripts:
       - name: Install dependencies
         script: |
           npm install -g eas-cli
           npm install
 
-      - name: Expo authenticate
+      - name: Verify Expo authentication
         script: |
-          npx eas whoami || npx eas login --token $EXPO_TOKEN
+          npx eas whoami --token $EAS_TOKEN
 
       - name: Expo prebuild (managed workflow)
         script: |
@@ -23,7 +23,7 @@ workflows:
 
       - name: Build iOS .ipa (Expo managed)
         script: |
-          npx eas build -p ios --profile preview --non-interactive
+          npx eas build -p ios --profile preview --non-interactive --token $EAS_TOKEN
 
     artifacts:
       - dist/**/*.ipa
