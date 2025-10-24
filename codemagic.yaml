@@ -12,15 +12,23 @@ workflows:
         script: |
           npm install -g expo-cli eas-cli
           npm install
+
+      - name: Expo login
+        script: |
+          expo login --token $EXPO_TOKEN
+
       - name: Expo prebuild (managed workflow)
         script: |
           npx expo prebuild --platform ios
+
       - name: Build iOS .ipa (Expo managed)
         script: |
           npx eas build -p ios --profile preview --non-interactive
+
     artifacts:
       - dist/**/*.ipa
       - build/**/*.ipa
+
     publishing:
       email:
         recipients:
