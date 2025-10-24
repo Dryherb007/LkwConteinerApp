@@ -10,12 +10,12 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
-          npm install -g expo-cli eas-cli
+          npm install -g eas-cli
           npm install
 
-      - name: Expo login
+      - name: Expo authenticate
         script: |
-          expo login --token $EXPO_TOKEN
+          npx eas whoami || npx eas login --token $EXPO_TOKEN
 
       - name: Expo prebuild (managed workflow)
         script: |
